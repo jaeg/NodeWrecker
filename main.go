@@ -32,6 +32,7 @@ var threadCount = 0
 var memory sync.Map
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	flag.Parse()
 	fmt.Println("Let's wreck it")
 
