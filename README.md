@@ -1,5 +1,5 @@
 # NodeWrecker
-Stress test your cluster under sporadic high cpu and high memory load. 
+Stress test your cluster under sporadic high cpu, memory, or disk load. 
 
 # Run via docker
 `docker start jaeg/nodewrecker --threads=4 --escalate=true --abuse-memory=true`
@@ -41,3 +41,9 @@ Stress test your cluster under sporadic high cpu and high memory load.
 - verbose
     - defaults: false
     - output everything from threads
+- output
+    - defaults: false
+    - write output from threads to txt files
+- output-dir
+    - defaults: ./
+    - directory to put output from threads

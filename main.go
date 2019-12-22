@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"os/signal"
+	"strconv"
 	"sync"
 	"syscall"
 	"time"
@@ -27,6 +28,8 @@ var maxDuration = flag.Int64("max-duration", 60, "max seconds a test lasts")
 var maxDelay = flag.Int64("max-delay", 10, "max seconds between tests")
 var minDelay = flag.Int64("min-delay", 1, "minimum seconds between tests")
 var verbose = flag.Bool("verbose", false, "output everything from threads")
+var output = flag.Bool("output", false, "Output content generated from threads")
+var outputDir = flag.String("output-dir", "./", "directory to put output")
 
 var threadCount = 0
 var memory sync.Map
@@ -114,6 +117,15 @@ func cpuThread(wg *sync.WaitGroup) {
 	id := threadCount
 	threadCount++
 	fmt.Println("Thread ", id, " has started")
+	var f *os.File
+	if *output {
+		var err error
+		f, err = os.Create(*outputDir + "/" + strconv.Itoa(id) + "-" + time.Now().String() + ".txt")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
 	for {
 		if shouldStop {
 			fmt.Println("Thread ", id, ": Got signal to stop.")
@@ -129,8 +141,15 @@ func cpuThread(wg *sync.WaitGroup) {
 		if *verbose {
 			fmt.Println("Thread ", id, " : ", string(c))
 		}
+		if *output {
+			f.WriteString(string(c))
+		}
 
 		time.Sleep(time.Duration(*msSleep) * time.Millisecond)
+	}
+
+	if *output {
+		f.Close()
 	}
 
 	wg.Done()
