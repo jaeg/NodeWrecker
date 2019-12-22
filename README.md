@@ -15,6 +15,7 @@ For Raspberry pi:
 
 ## Run via docker
 `docker start jaeg/nodewrecker:latest --threads=4 --escalate=true --abuse-memory=true --chaos`
+
 Raspberry pi: 
 `docker start jaeg/nodewrecker:latest-pi --threads=4 --escalate=true --abuse-memory=true --chaos`
 ## Install via helm
