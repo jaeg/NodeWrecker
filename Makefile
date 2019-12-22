@@ -2,10 +2,11 @@ REPO = jaeg/nodewrecker
 VERSION = 0.0.4
 
 image: build-linux
-	docker build -t $(REPO):$(VERSION) .
+	docker build -t $(REPO):$(VERSION) . --build-arg binary=NodeWrecker-linux
 
 image-pi: build-linux-pi
-	docker build -t $(REPO):$(VERSION)-pi .
+
+	docker build -t $(REPO):$(VERSION)-pi . --build-arg binary=NodeWrecker-linux-pi
 
 build:
 	go build -o pkg/NodeWrecker
@@ -18,3 +19,10 @@ build-linux-pi:
 
 publish-pi:
 	docker push $(REPO):$(VERSION)-pi
+	docker tag $(REPO):$(VERSION)-pi $(REPO):latest-pi
+	docker push $(REPO):latest-pi
+
+publish:
+	docker push $(REPO):$(VERSION)
+	docker tag $(REPO):$(VERSION) $(REPO):latest
+	docker push $(REPO):latest

@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: jaeg/nodewrecker
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
@@ -67,4 +67,3 @@ affinity: {}
 
 extraArgs:
   escalate:
-  abuse-memory:

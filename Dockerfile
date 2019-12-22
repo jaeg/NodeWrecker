@@ -1,5 +1,6 @@
 FROM scratch
-
-ADD pkg/NodeWrecker-linux-pi /NodeWrecker
+ARG binary
+ENV env_var_name=$binary
+ADD pkg/$binary /NodeWrecker
 
 ENTRYPOINT ["/NodeWrecker"]
