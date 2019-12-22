@@ -1,13 +1,26 @@
 # NodeWrecker
 Stress test your cluster under sporadic high cpu and high memory load. 
 
-# Run via docker
-`docker start jaeg/nodewrecker --threads=4 --escalate=true --abuse-memory=true`
+## Build image
+`make image`
 
-# Install via helm
+For Raspberry pi:
+`make image-pi`
+
+## Build binary
+`make build`
+
+For Raspberry pi:
+`make build-pi`
+
+## Run via docker
+`docker start jaeg/nodewrecker:latest --threads=4 --escalate=true --abuse-memory=true --chaos`
+Raspberry pi: 
+`docker start jaeg/nodewrecker:latest-pi --threads=4 --escalate=true --abuse-memory=true --chaos`
+## Install via helm
 `helm upgrade --install pi-wrecker ./helm-chart/`
 
-# Flags
+## Flags
 - threads 
     - default:4
     - Number of threads to run
