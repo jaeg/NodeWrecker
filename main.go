@@ -78,6 +78,7 @@ func makeChaos() {
 	for !ended {
 		shouldStop = true
 		threadCount = 0
+		memory = sync.Map{}
 		max := *maxDelay - *minDelay
 		delay := *minDelay + rand.Int63n(max)
 		fmt.Println("Chaos is sleeping for ", delay, " seconds..")
