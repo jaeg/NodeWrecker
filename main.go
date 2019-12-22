@@ -13,6 +13,7 @@ import (
 )
 
 var shouldStop = false
+var ended = false
 
 var threads = flag.Int("threads", 4, "Number of threads to run")
 var msSleep = flag.Int64("sleep", 1, "milliseconds to sleep")
@@ -20,6 +21,12 @@ var shouldEscalate = flag.Bool("escalate", false, "Keep creating threads")
 var escalateRate = flag.Int64("escalate-rate", 1000, "milliseconds between creating new threads")
 var stringLength = flag.Int("string-length", 1000, "length of randomly generated string")
 var abuseMemory = flag.Bool("abuse-memory", false, "if true nodewrecker will store all generated values in memory")
+var chaos = flag.Bool("chaos", false, "When true stress testing starts and stops randomly.")
+var minDuration = flag.Int64("min-duration", 10, "minimum seconds a test lasts")
+var maxDuration = flag.Int64("max-duration", 60, "max seconds a test lasts")
+var maxDelay = flag.Int64("max-delay", 10, "max seconds between tests")
+var minDelay = flag.Int64("min-delay", 1, "minimum seconds between tests")
+var verbose = flag.Bool("verbose", false, "output everything from threads")
 
 var threadCount = 0
 var memory sync.Map
@@ -35,21 +42,52 @@ func main() {
 		<-c
 		fmt.Println("Sign to stop")
 		shouldStop = true
+		ended = true
 	}()
 
+	if *chaos {
+		shouldStop = true
+		go makeChaos()
+	}
+
 	var wg sync.WaitGroup
-	for i := 0; i < *threads; i++ {
-		wg.Add(1)
-		go cpuThread(&wg)
+
+	for !ended {
+		if !shouldStop {
+			for i := 0; i < *threads; i++ {
+				wg.Add(1)
+				go cpuThread(&wg)
+			}
+
+			if *shouldEscalate {
+				wg.Add(1)
+				go escalate(&wg)
+			}
+
+			wg.Wait()
+		} else {
+			time.Sleep(1 * time.Second)
+		}
 	}
 
-	if *shouldEscalate {
-		wg.Add(1)
-		go escalate(&wg)
-	}
-
-	wg.Wait()
 	fmt.Println("Stopping")
+}
+
+func makeChaos() {
+	for !ended {
+		shouldStop = true
+		threadCount = 0
+		max := *maxDelay - *minDelay
+		delay := *minDelay + rand.Int63n(max)
+		fmt.Println("Chaos is sleeping for ", delay, " seconds..")
+		time.Sleep(time.Duration(delay) * time.Second)
+
+		shouldStop = false
+		max = *maxDuration - *minDuration
+		delay = *minDuration + rand.Int63n(max)
+		fmt.Println("Chaos is awake for ", delay, " seconds!")
+		time.Sleep(time.Duration(delay) * time.Second)
+	}
 }
 
 func escalate(wg *sync.WaitGroup) {
@@ -76,7 +114,7 @@ func cpuThread(wg *sync.WaitGroup) {
 	fmt.Println("Thread ", id, " has started")
 	for {
 		if shouldStop {
-			fmt.Println("Got signal to stop.")
+			fmt.Println("Thread ", id, ": Got signal to stop.")
 			break
 		}
 
@@ -86,14 +124,15 @@ func cpuThread(wg *sync.WaitGroup) {
 		if *abuseMemory {
 			memory.Store(a, b)
 		}
-		fmt.Println("Thread ", id, " : ", string(c))
+		if *verbose {
+			fmt.Println("Thread ", id, " : ", string(c))
+		}
+
 		time.Sleep(time.Duration(*msSleep) * time.Millisecond)
 	}
 
 	wg.Done()
 }
-
-var iv = []byte{35, 46, 57, 24, 85, 35, 24, 74, 87, 35, 88, 98, 66, 32, 14, 05}
 
 func encodeBase64(b []byte) string {
 	return base64.StdEncoding.EncodeToString(b)

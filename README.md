@@ -24,5 +24,17 @@
     - default:1000
     - length of randomly generated string
 - abuse-memory
-    - defailt:false
+    - default:false
     - if true nodewrecker will store all generated values in memory
+- min-duration
+    - default: 10
+    - minimum seconds a test lasts
+- max-duration
+    - default: 60
+    - max seconds a test lasts
+- max-deay
+    - default: 10
+    - max seconds between tests
+- min-delay
+    - defaults: 10
+    - min seconds between tests
