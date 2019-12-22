@@ -4,6 +4,9 @@
 # Run via docker
 `docker start jaeg/nodewrecker --threads=4 --escalate=true --abuse-memory=true`
 
+# Install via helm
+`helm upgrade --install pi-wrecker ./helm-chart/`
+
 # Flags
 - threads 
     - default:4
