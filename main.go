@@ -37,6 +37,7 @@ var memory sync.Map
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	flag.Parse()
+	fmt.Println("Version: " + os.Getenv("version"))
 	fmt.Println("Let's wreck it")
 
 	//Capture sigterm

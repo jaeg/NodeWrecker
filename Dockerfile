@@ -1,6 +1,7 @@
 FROM scratch
 ARG binary
-ENV env_var_name=$binary
+ARG version
+ENV version=$version
 ADD pkg/$binary /NodeWrecker
 
 ENTRYPOINT ["/NodeWrecker"]
