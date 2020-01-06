@@ -22,6 +22,9 @@ Raspberry pi:
 `helm upgrade --install pi-wrecker ./helm-chart/`
 
 ## Flags
+- chaos
+    - default:false
+    - Enables chaos mode
 - threads 
     - default:4
     - Number of threads to run
