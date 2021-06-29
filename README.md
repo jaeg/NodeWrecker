@@ -23,8 +23,8 @@ Raspberry pi:
 `helm upgrade --install node-wrecker ./helm-chart/`
 
 Raspberry pi:
-Update appVersion in helm-chart/chart.yaml from `latest` to `latest-pi`
-`helm upgrade --install pi-wrecker ./helm-chart/ `
+- Update appVersion in helm-chart/chart.yaml from `latest` to `latest-pi`
+- `helm upgrade --install pi-wrecker ./helm-chart/ `
 
 ## Flags
 - chaos
