@@ -18,8 +18,13 @@ For Raspberry pi:
 
 Raspberry pi: 
 `docker start jaeg/nodewrecker:latest-pi --threads=4 --escalate=true --abuse-memory=true --chaos`
+
 ## Install via helm
-`helm upgrade --install pi-wrecker ./helm-chart/`
+`helm upgrade --install node-wrecker ./helm-chart/`
+
+Raspberry pi:
+Update appVersion in helm-chart/chart.yaml from `latest` to `latest-pi`
+`helm upgrade --install pi-wrecker ./helm-chart/ `
 
 ## Flags
 - chaos
